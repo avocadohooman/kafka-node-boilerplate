@@ -21,7 +21,7 @@ const establishConsumer = async () => {
 
 	await kafkaConsumer.run({
 		"eachMessage": async result => {
-			console.log(`'received message: ${result.message.value} on partiion ${result.partition}`);
+			console.log(`received message: ${result.message.value} on partiion ${result.partition}`);
 		}
 	})
 }
