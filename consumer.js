@@ -1,5 +1,19 @@
-const { Kafka } = require('kafkajs');
+import { Kafka } from 'kafkajs';
+import avro from 'avsc';
 
+const messageType = avro.Type.forSchema({
+	type: 'record',
+	fields: [
+		{
+			name: 'name',
+			type: 'string'
+		},
+		{
+			name: 'email',
+			type: 'string'
+		}
+	]
+});
 const userDb = [];
 
 const establishConsumer = async () => {
@@ -22,8 +36,8 @@ const establishConsumer = async () => {
 
 	await kafkaConsumer.run({
 		"eachMessage": async result => {
-			console.log(`received message: ${result.message.value} on partiion ${result.partition}`);
-			userDb.push(result.message.value.toString());
+			console.log(`received message: ${messageType.fromBuffer(result.message.value)} on partiion ${result.partition}`);
+			userDb.push(messageType.fromBuffer(result.message.value));
 			console.log(`${result.message.value} added to DB`);
 			console.log(userDb);
 		}

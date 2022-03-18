@@ -1,4 +1,19 @@
-const { Kafka } = require('kafkajs');
+import { Kafka } from 'kafkajs';
+import avro from 'avsc';
+
+const messageType = avro.Type.forSchema({
+	type: 'record',
+	fields: [
+		{
+			name: 'name',
+			type: 'string'
+		},
+		{
+			name: 'email',
+			type: 'string'
+		}
+	]
+});
 
 const msg = process.argv[2];
 
@@ -16,12 +31,13 @@ const establishProducer = async () => {
 	await kafkaProducer.connect();
 	console.log('Connectd!');
 	const partition = msg[0] < 'N' ? 0 : 1;
+	const newEvent = {name: msg, email: 'test@test.com'};
 	try {
 		const response = await kafkaProducer.send({
 			"topic": "Users",
 			"messages": [
 				{
-					"value": msg,
+					"value": messageType.toBuffer(newEvent),
 					"partition": partition,
 				}
 			],

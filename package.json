@@ -1,5 +1,7 @@
 {
+"type":"module",
   "dependencies": {
+    "avsc": "^5.7.3",
     "kafkajs": "^1.16.0"
   }
 }
