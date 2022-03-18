@@ -1,5 +1,6 @@
 const { Kafka } = require('kafkajs');
 
+const userDb = [];
 
 const establishConsumer = async () => {
 	const kafka = await new Kafka({
@@ -22,8 +23,11 @@ const establishConsumer = async () => {
 	await kafkaConsumer.run({
 		"eachMessage": async result => {
 			console.log(`received message: ${result.message.value} on partiion ${result.partition}`);
+			userDb.push(result.message.value.toString());
+			console.log(`${result.message.value} added to DB`);
+			console.log(userDb);
 		}
-	})
+	});
 }
 
 const runMain = async () => {
